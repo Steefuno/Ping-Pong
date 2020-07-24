@@ -1,5 +1,27 @@
+import signal
 import socket
 import sys
+
+def setup(port):
+	global server_socket
+
+	# Create socket
+	try:
+		server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		print("Created server socket.")
+	except socket.error as err:
+		print("Failed to create server socket: {}.".format(err))
+		exit()
+
+	# Bind socket
+	binding = ("localhost", port)
+	server_socket.bind(binding)
+	print("Binded to port, {}. Waiting for connection.".format(port))
+
+def terminate(signalNumber, frame):
+	server_socket.close()
+	print("Closed server socket.")
+	exit()
 
 def main():
 	# Prompt user for port number
@@ -9,34 +31,18 @@ def main():
 	if not port.isdigit():
 		print("Invalid port number.")
 		exit()
-	port = int(port)
-	
-	# Create socket
-	try:
-		serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		print("Created server socket.")
-	except socket.error as err:
-		print("Failed to create server socket: {}.".format(err))
-		exit()
 
-	# Bind socket
-	binding = ("localhost", port)
-	serverSocket.bind(binding)
-	print("Binded to port, {}. Waiting for connection.".format(port))
+	setup(int(port))
 
-	# Listen for a connection
-	serverSocket.listen(1)
+	# register terminate signals
+	signal.signal(signal.SIGINT, terminate)
 
-	# Accept connection
-	connection, client = serverSocket.accept()
-	print("Connected.");
+	while True:
+		print("Waiting for message.")
+		message, address = server_socket.recvfrom(4096)
+		print("Received message from {}.".format(address))
+		print(message)
 
-	# Receive data
-	data = connection.recv(128)
-	print("Received: {}".format(data))
-
-	# Close socket
-	serverSocket.close()
-	exit()
+	print("Hey.")
 
 main()
