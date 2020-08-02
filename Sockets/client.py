@@ -15,8 +15,8 @@ def setup(host, port):
 def main():
 	# Ask user for hostname and port
 	# Note 127.0.0.1 is localhost
-	host = raw_input("\nPlease input an internet domain or an IPv4 host address: ");
-	port = raw_input("Please input a port number: ");
+	host = input("\nPlease input an internet domain or an IPv4 host address: ")
+	port = input("Please input a port number: ")
 
 	if not port.isdigit():
 		print("Invalid port number.")
@@ -25,8 +25,8 @@ def main():
 	client_socket = setup(host, int(port))
 
 	# Send data
-	message = raw_input("Please input a message to send to the host: ");
-	client_socket.sendto(message, (host, int(port)));
+	message = input("Please input a message to send to the host: ")
+	client_socket.sendto(message, (host, int(port)))
 	print("Sent: {}".format(message))
 
 	# Close socket

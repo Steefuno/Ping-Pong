@@ -26,9 +26,9 @@ def terminate(signalNumber, frame):
 def main():
 	# Prompt user for port number
 	print("\nThis program will be hosted on the localhost.")
-	port = raw_input("Please input a port number: ");
+	port = input("Please input a port number: ")
 
-	if not port.isdigit():
+	if no	t port.isdigit():
 		print("Invalid port number.")
 		exit()
 
